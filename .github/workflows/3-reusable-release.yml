@@ -1,0 +1,51 @@
+name: 3-Reusable Release
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: 'Release version'
+        required: true
+        type: string
+      artifact_registry:
+        description: 'Artifact server to publish to (e.g., docker, nexus, artifactory)'
+        required: false
+        default: 'docker'
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up environment
+      run: |
+        echo "Setting up environment"
+
+    - name: Build application
+      run: |
+        echo "Building application ..."
+
+    - name: Log in to Docker
+      if: ${{ inputs.artifact_registry == 'docker' }}
+      run: |
+        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+        - name: Log in to Nexus
+          if: ${{ inputs.artifact_registry == 'nexus' }}
+          run: |
+            echo "Logging in to Nexus"
+            # Add Nexus login commands here if necessary
+
+    - name: Publish artifact
+      run: |
+        if [ "${{ inputs.artifact_registry }}" == "docker" ]; then
+          docker build -t my-app:${{ inputs.version }} .
+          docker push my-app:${{ inputs.version }}
+        elif [ "${{ inputs.artifact_registry }}" == "nexus" ]; then
+          curl -v --upload-file my-app-${{ inputs.version }}.jar "http://nexus.example.com/repository/maven-releases/com/mycompany/app/my-app/${{ inputs.version }}/my-app-${{ inputs.version }}.jar"
+        else
+          echo "Publishing to ${{ inputs.artifact_registry }} is not supported in this script."

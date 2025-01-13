@@ -1,0 +1,22 @@
+name: 2-Packaging
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag name for the release'
+        required: true
+        default: 'v1.0.0'
+      release_name:
+        description: 'Name of the release'
+        required: true
+        default: 'Release v1.0.0'
+
+jobs:
+  call-common-build:
+    uses: ./.github/workflows/2-reusable-packaging.yml
+    with:
+      tag_name: ${{ github.event.inputs.tag_name || github.ref }}
+      release_name: ${{ github.event.inputs.release_name || 'Release ' + github.ref }}

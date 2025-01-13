@@ -1,0 +1,23 @@
+name: 3-Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version'
+        required: true
+        default: 'v1.0.0'
+      artifact_registry:
+        description: 'Artifact server to publish to (e.g., docker, nexus, artifactory)'
+        required: false
+        default: 'docker'
+
+jobs:
+  call-reusable-release:
+    uses: ./.github/workflows/3-reusable-release.yml
+    with:
+      version: ${{ github.event.inputs.version || github.ref_name }}
+      artifact_registry: ${{ github.event.inputs.artifact_registry || 'docker' }}
