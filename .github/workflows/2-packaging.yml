@@ -35,4 +35,4 @@ jobs:
     with:
       tag_name: ${{ github.event.inputs.tag_name || github.ref }}
       release_name: ${{ github.event.inputs.release_name || needs.preparation.outputs.release_name }}
-      github_token: ${{ secrets.GITHUB_TOKEN }}
+      github_token: ${{ github.token }}
