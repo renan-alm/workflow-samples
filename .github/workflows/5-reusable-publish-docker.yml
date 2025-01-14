@@ -1,4 +1,4 @@
-name: Create and publish a Docker image
+name: 5 - Reusable create and publish a Docker image
 
 on:
   workflow_call:
