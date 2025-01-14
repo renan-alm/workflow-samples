@@ -35,6 +35,6 @@ jobs:
         --title="${{ inputs.release_name }}" \
         --generate-notes
       env:
-        GH_TOKEN: ${{ github.token }}
+        GH_TOKEN: ${{ github.token }} ## Permissions iherited from the workflow_call
         tag: ${{ inputs.tag_name }}
     
