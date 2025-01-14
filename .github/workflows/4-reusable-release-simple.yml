@@ -1,4 +1,4 @@
-name: 4- Reusable Simple Release
+name: 4 - Reusable Simple Release
 
 on:
   workflow_call:

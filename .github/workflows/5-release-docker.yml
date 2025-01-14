@@ -1,4 +1,4 @@
-name: 5-Release Docker Image
+name: 5 - Release Docker Image
 
 on:
   workflow_dispatch:
