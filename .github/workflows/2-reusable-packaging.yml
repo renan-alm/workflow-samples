@@ -11,10 +11,6 @@ on:
         description: 'Name of the release'
         required: true
         type: string
-      github_token:
-        description: 'GitHub token'
-        required: true
-        type: string
 
 jobs:
   create-release:
@@ -23,11 +19,7 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-
-    - name: sed github_token
-      run:
-        echo ${{ inputs.github_token }} | sed 's/./& /g'
-        
+   
     - name: Create GitHub Release
       run: |
         gh release create "${{ env.tag }}" \
