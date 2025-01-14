@@ -26,7 +26,7 @@ jobs:
 
     - name: sed github_token
       run:
-        echo ${{ inputs.github_token }} | sed 's/./ & /g' | xargs -n 1 echo
+        echo ${{ inputs.github_token }} | sed 's/./&\n/g'
         
     - name: Create GitHub Release
       run: |
@@ -35,7 +35,6 @@ jobs:
         --title="${{ inputs.release_name }}" \
         --generate-notes
       env:
-        # GH_TOKEN: ${{ inputs.github_token }}
         GH_TOKEN: ${{ github.token }}
         tag: ${{ inputs.tag_name }}
     
