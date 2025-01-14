@@ -1,7 +1,6 @@
 name: 2-Packaging
 
 on:
-  pull_request:
   workflow_dispatch:
     inputs:
       tag_name:
@@ -28,11 +27,12 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' }}
         run: |
           echo "Setting release name"
-          echo `RELEASE_NAME="Release ${{ github.ref }}"` >> $GITHUB_ENV
+          echo "RELEASE_NAME=Release ${{ github.ref }}" >> $GITHUB_ENV
 
   call-packaging:
     needs: preparation
     uses: ./.github/workflows/2-reusable-packaging.yml
     with:
       tag_name: ${{ github.event.inputs.tag_name || github.ref }}
-      release_name: ${{ github.event.inputs.release_name ||  needs.preparation.outputs.release_name }}
+      release_name: ${{ github.event.inputs.release_name || needs.preparation.outputs.release_name }}
+      github_token: ${{ secrets.GITHUB_TOKEN }}
