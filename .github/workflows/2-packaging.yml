@@ -1,4 +1,4 @@
-name: 2-Packaging
+name: 2 - Packaging
 
 on:
   workflow_dispatch:
