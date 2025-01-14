@@ -1,23 +1,28 @@
 name: 3-Release
 
 on:
-  # push:
-  #   tags:
-  #     - 'v*.*.*'
   workflow_dispatch:
     inputs:
-      version:
-        description: 'Release version'
+      registry:
+        description: 'Docker registry'
         required: true
-        default: 'v1.0.0'
-      artifact_registry:
-        description: 'Artifact server to publish to (e.g., docker, nexus, artifactory)'
-        required: false
-        default: 'docker'
+        default: 'docker.io'
+      image_name:
+        description: 'Docker image name'
+        required: true
+        default: ${{ github.repository }}
+      docker_username:
+        description: 'Docker username'
+        required: true
+      docker_password:
+        description: 'Docker password'
+        required: true
 
 jobs:
-  call-reusable-release:
-    uses: ./.github/workflows/3-reusable-release.yml
+  call-reusable-publish-docker:
+    uses: ./.github/workflows/4-reusable-publish-docker.yml
     with:
-      version: ${{ github.event.inputs.version || github.ref_name }}
-      artifact_registry: ${{ github.event.inputs.artifact_registry || 'docker' }}
+      registry: ${{ github.event.inputs.registry }}
+      image_name: ${{ github.event.inputs.image_name }}
+      docker_username: ${{ github.event.inputs.docker_username }}
+      docker_password: ${{ github.event.inputs.docker_password }}
