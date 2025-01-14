@@ -1,4 +1,4 @@
-name: Reusable Packaging
+name: 2 - Reusable Packaging
 
 on:
   workflow_call:
