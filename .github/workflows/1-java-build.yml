@@ -28,5 +28,5 @@ jobs:
       build_command: 'mvn package'
       test_command: 'mvn test'
       package_command: 'mvn package'
-      coverage_file: 'target/site/jacoco/index.html'
+      coverage_file: 'target/tests/index.html'
       package_file: ${{ github.event.inputs.package_file }}

@@ -46,7 +46,7 @@ on:
         required: false
         default: './scripts/env-vars.sh'
         type: string
-      package_file:
+      package_file_path:
         description: 'Path to the package file to upload'
         required: true
         type: string
@@ -101,6 +101,7 @@ jobs:
         name: test-coverage
         path: ${{ inputs.coverage_file }}
 
+    ## The package_file_path is created by the builder which has the path to the artifact 
     - name: Create GitHub Release and upload artifact
       if: always() 
       run: |
@@ -108,7 +109,7 @@ jobs:
         --repo="${GITHUB_REPOSITORY}" \
         --title="Release $tag" \
         --generate-notes \
-        ${{ inputs.package_file }}
+        ${{ inputs.package_file_path }}
       env:
         GITHUB_TOKEN: ${{ github.token }}
         tag: ${{ github.ref }}
