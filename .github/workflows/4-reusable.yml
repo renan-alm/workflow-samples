@@ -1,0 +1,15 @@
+name: 4 - Call Release Simple
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  call-reusable-release-simple:
+    uses: ./.github/workflows/4-reusable-release-simple.yml
+    with:
+      github_token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,26 @@
+name: 1-Java Build
+
+on:
+  push:
+    paths:
+      - '.github/workflows/1-java-build.yml'
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      build_image:
+        description: 'Docker image for the build'
+        required: true
+        default: 'maven:3.8.4-openjdk-11'
+        type: string
+
+jobs:
+  build-java-project:
+    uses: ./.github/workflows/1-reusable-build.yml
+    with:
+      bootstrap_script: './scripts/bootstrap-java.sh'
+      build_image: ${{ github.event.inputs.build_image }}
+      install_deps_command: 'mvn install'
+      build_command: 'mvn package'
+      test_command: 'mvn test'
+      package_command: 'mvn package'
+      coverage_file: 'target/site/jacoco/index.html'

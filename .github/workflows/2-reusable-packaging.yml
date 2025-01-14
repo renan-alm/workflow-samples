@@ -1,4 +1,4 @@
-name: Common Build
+name: 2-Reusable-Build
 
 on:
   workflow_call:
@@ -16,7 +16,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up environment
       run: |

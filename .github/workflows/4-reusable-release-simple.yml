@@ -1,0 +1,30 @@
+name: 4- Reusable Simple Release
+
+on:
+  workflow_call:
+    inputs:
+      github_token:
+        description: 'GitHub token'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release_simple:
+    name: Release pushed tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ inputs.github_token }}
+          tag: ${{ github.ref_name }}
+        run: |
+          gh release create "$tag" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="${tag#v}" \
+              --generate-notes

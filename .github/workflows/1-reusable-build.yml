@@ -1,0 +1,123 @@
+name: 1-Reusable Build
+
+on:
+  workflow_call:
+    inputs:
+      bootstrap_script:
+        description: 'Path to the bootstrap script to execute'
+        required: false
+        type: string
+      install_deps_command:
+        description: 'Command to install dependencies'
+        default: 'mvn install'
+        required: true
+        type: string
+      build_command:
+        description: 'Command to build the project'
+        default: 'mvn package'
+        required: true
+        type: string
+      test_command:
+        description: 'Command to run tests'
+        default: 'mvn test'
+        required: true
+        type: string
+      package_command:
+        description: 'Command to package the project'
+        default: 'mvn package'
+        required: true
+        type: string
+      build_image:
+        description: 'Docker image for the build'
+        required: true
+        default: 'maven:3.8.4-openjdk-11'
+        type: string
+      build_options:
+        description: 'Additional options for the build image'
+        required: false
+        type: string
+      coverage_file:
+        description: 'Path to the test coverage file'
+        required: false
+        default: 'target/site/jacoco/index.html'
+        type: string
+      env_vars_file:
+        description: 'Path to the environment variables file'
+        required: false
+        default: './scripts/env-vars.sh'
+        type: string
+      package_file:
+        description: 'Path to the package file to upload'
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      docker:
+        image: ${{ inputs.build_image }}
+        options:  ${{ inputs.build_options || '--privileged' }}
+        volumes:
+          - /home/runner/work:/workspace
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Source environment variables
+      run: source ${{ inputs.env_vars_file }}
+
+    - name: Execute bootstrap script
+      if: ${{ inputs.bootstrap_script }}
+      run: bash ${{ inputs.bootstrap_script }}
+
+    ## Caching recommendable but specific to the project type
+    ## Might be an overkill but another reusable workflow could be called here depending on a project type input variable
+    # - name: Cache Maven dependencies
+    #   uses: actions/cache@v4.2.0
+    #   with:
+    #     path: ~/.m2/repository
+    #     key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-maven-
+
+    - name: Install dependencies
+      run: source ${{ inputs.env_vars_file }} && ${{ inputs.install_deps_command }}
+
+    - name: Build project
+      run: source ${{ inputs.env_vars_file }} && ${{ inputs.build_command }}
+
+    - name: Run tests
+      run: source ${{ inputs.env_vars_file }} && ${{ inputs.test_command }}
+
+    - name: Package project
+      run: source ${{ inputs.env_vars_file }} && ${{ inputs.package_command }}
+
+    - name: Upload test coverage
+      if: always()
+      uses: actions/upload-artifact@v4.6.0
+      with:
+        name: test-coverage
+        path: ${{ inputs.coverage_file }}
+
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ inputs.package_file }}
+        asset_name: $(basename ${{ inputs.package_file }})
+        asset_content_type: application/zip
