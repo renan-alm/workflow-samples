@@ -20,7 +20,7 @@ on:
         type: string
     secrets:
       registry_pwd:
-        description: 'GitHub token'
+        description: 'Access token'
         required: true
 
 jobs:
