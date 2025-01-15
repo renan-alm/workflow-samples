@@ -1,6 +1,9 @@
 name: 5 - Release Image
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       registry:
