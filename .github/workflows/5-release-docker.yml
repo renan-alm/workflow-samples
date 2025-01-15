@@ -28,12 +28,12 @@ jobs:
       - name: Image version for workflow dispatch
         if: github.event_name == 'workflow_dispatch'
         run: |
-          echo set-output name=image_version::${{ github.event.inputs.image_version }}
+          echo "image_version=${{ github.event.inputs.image_version }}" >> $GITHUB_OUTPUT"
 
       - name: Image version from hash
         if: github.event_name != 'workflow_dispatch'
         run: |
-          echo set-output name=image_version::${{ github.sha }}
+          echo "image_version=${{ github.sha }}" | cut -c1-5 >> $GITHUB_OUTPUT"
 
   publish-image:
     needs: preparation
