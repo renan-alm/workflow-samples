@@ -12,6 +12,10 @@ on:
         required: true
         default: 'latest'
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   preparation:
     outputs:
@@ -36,4 +40,4 @@ jobs:
       image_name: ${{ github.repository }}
       image_version: ${{ needs.preparation.outputs.image_version }}
     secrets:
-      github_token: ${{ secrets.GITHUB_TOKEN }}
+      github_token: ${{ github.token }}
