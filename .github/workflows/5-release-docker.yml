@@ -22,19 +22,24 @@ permissions:
 jobs:
   preparation:
     outputs:
-      image_version: ${{ github.event.inputs.image_version }}
+      image_version:
+      image_version: ${{ steps.set_image_version.outputs.image_version }}
     runs-on: ubuntu-latest
     steps:
-      - name: Image version for workflow dispatch
-        if: github.event_name == 'workflow_dispatch'
-        run: |
-          echo "image_version=${{ github.event.inputs.image_version }}" >> $GITHUB_OUTPUT
-
       - name: Image version from hash
+        id: hash_step
         if: github.event_name != 'workflow_dispatch'
         run: |
           calculatedSha=$(git rev-parse --short ${{ github.sha }})
           echo "image_version=$calculatedSha" >> $GITHUB_OUTPUT
+
+      - name: Set image version
+        id: set_image_version
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "image_version=${{ github.event.inputs.image_version }}" >> $GITHUB_OUTPUT
+          else
+            echo "image_version=${{ steps.hash_step.outputs.image_version }}" >> $GITHUB_OUTPUT
 
   publish-image:
     needs: preparation
