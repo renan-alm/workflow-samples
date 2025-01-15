@@ -3,7 +3,7 @@ name: 2 - Reusable Packaging
 on:
   workflow_call:
     inputs:
-      tag_name:
+      tag_value:
         description: 'Tag name for the release'
         required: true
         type: string
@@ -28,5 +28,5 @@ jobs:
         --generate-notes
       env:
         GH_TOKEN: ${{ github.token }} ## Permissions iherited from the workflow_call
-        tag: ${{ inputs.tag_name }}
+        tag: ${{ inputs.tag_value }}
     
