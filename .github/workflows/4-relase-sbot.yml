@@ -1,0 +1,19 @@
+name: 4 - Release Sbot
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      semverbot_version:
+        description: 'Semverbot version'
+        required: true
+        default: '1.0.0'
+
+jobs:
+  call-reusable-release-sbot:
+    uses: ./.github/workflows/4-reusable-release-sbot.yml
+    with:
+      github_token: ${{ secrets.GITHUB_TOKEN }}
+      semverbot_version: ${{ github.event.inputs.semverbot_version }}

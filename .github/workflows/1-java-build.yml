@@ -2,8 +2,18 @@ name: 1 - Java Build
 
 on:
   push:
-    paths:
-      - '.github/workflows/1-java-build.yml'
+    branches:
+      - 'feat/**'
+      - 'fix/**'
+      - 'hotfix/**'
+    # paths:
+    #   - '.github/workflows/1-java-build.yml' ## Only as an example - adjust this line, for ex: app/**, src/**, etc.
+    paths-ignore:
+      - 'docs/**'
+      - 'tests/**'
+      - '**/*.md'
+      - '**/*.yml'
+
   pull_request:
   workflow_dispatch:
     inputs:
@@ -22,7 +32,7 @@ jobs:
   build-java-project:
     uses: ./.github/workflows/1-reusable-build.yml
     with:
-      bootstrap_script: './scripts/bootstrap-java.sh'
+      bootstrap_script: './scripts/bootstrap-java.sh'  ## Not best practice - ideally put this in steps of the reusable workflow
       build_image: ${{ github.event.inputs.build_image }}
       install_deps_command: 'mvn install'
       build_command: 'mvn package'
