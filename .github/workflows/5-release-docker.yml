@@ -25,6 +25,9 @@ jobs:
       image_version: ${{ steps.set_version.outputs.image_version }}
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Image version from hash
         id: set_hash
         if: github.event_name != 'workflow_dispatch'
