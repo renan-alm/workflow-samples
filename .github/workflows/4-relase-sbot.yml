@@ -3,7 +3,8 @@ name: 4 - Release Sbot
 on:
   push:
     branches:
-      - main
+      - 'release/**'
+
   workflow_dispatch:
     inputs:
       semverbot_version:
