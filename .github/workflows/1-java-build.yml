@@ -39,5 +39,5 @@ jobs:
       test_command: 'mvn test'
       package_command: 'mvn package'
       coverage_file: 'target/tests/index.html'
-      # package_file_path is configured by the builder tool
+      # The below is configured at the builder tool
       package_file_path: ${{ github.event.inputs.package_file }}

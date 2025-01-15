@@ -50,6 +50,7 @@ jobs:
   call-packaging:
     needs: preparation
     uses: ./.github/workflows/2-reusable-packaging.yml
+    secrets: inherit
     with:
       tag_value: ${{ github.event.inputs.tag_value || needs.preparation.outputs.tag_value }}
       release_name: ${{ github.event.inputs.release_name || needs.preparation.outputs.release_name }}
