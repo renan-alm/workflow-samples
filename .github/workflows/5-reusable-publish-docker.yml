@@ -19,7 +19,7 @@ on:
         default: 'latest'
         type: string
     secrets:
-      github_token:
+      registry_pwd:
         description: 'GitHub token'
         required: true
 
@@ -38,7 +38,7 @@ jobs:
         with:
           registry: ${{ inputs.registry }}
           username: ${{ github.actor }}
-          password: ${{ secrets.github_token }}
+          password: ${{ secrets.registry_pwd }}
 
       - name: Extract meta (tags, labels) for Docker
         uses: docker/metadata-action@v5

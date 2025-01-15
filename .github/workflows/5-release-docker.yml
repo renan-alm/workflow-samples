@@ -43,4 +43,4 @@ jobs:
       image_name: ${{ github.repository }}
       image_version: ${{ needs.preparation.outputs.image_version }}
     secrets:
-      github_token: ${{ github.token }}
+      registry_pwd: ${{ github.token }}
