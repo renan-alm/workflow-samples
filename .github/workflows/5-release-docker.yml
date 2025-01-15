@@ -28,7 +28,8 @@ jobs:
       - name: Image version for workflow dispatch
         if: github.event_name == 'workflow_dispatch'
         run: |
-          echo "image_version=${{ github.event.inputs.image_version }}" >> $GITHUB_OUTPUT
+          calculatedSha=$(git rev-parse --short ${{ github.sha }})
+          echo "image_version=$calculatedSha" >> $GITHUB_OUTPUT
 
       - name: Image version from hash
         if: github.event_name != 'workflow_dispatch'
