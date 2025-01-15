@@ -33,7 +33,7 @@ jobs:
       - name: Image version from hash
         if: github.event_name != 'workflow_dispatch'
         run: |
-          echo "image_version=${{ github.sha }}" | cut -c1-5 >> $GITHUB_OUTPUT"
+          echo "image_version=${{ github.sha:0:5 }}" >> $GITHUB_OUTPUT"
 
   publish-image:
     needs: preparation
