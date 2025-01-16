@@ -7,13 +7,13 @@ on:
       - 'fix/**'
       - 'hotfix/**'
     # paths:
+    #   - 'scr/**'
     #   - '.github/workflows/1-java-build.yml' ## Only as an example - adjust this line, for ex: app/**, src/**, etc.
     paths-ignore:
       - 'docs/**'
       - 'tests/**'
       - '**/*.md'
       - '**/*.yml'
-
   pull_request:
   workflow_dispatch:
     inputs:
