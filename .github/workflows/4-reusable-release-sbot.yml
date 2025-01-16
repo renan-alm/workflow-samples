@@ -2,11 +2,11 @@ name: 4 - Reusable Release Pipeline
 
 on:
   workflow_call:
-    inputs:
+    secrets:
       github_token:
         description: 'GitHub token'
         required: true
-        type: string
+    inputs:
       semverbot_version:
         description: 'Semverbot version'
         required: true
@@ -49,3 +49,5 @@ jobs:
       run: |
         sbot release version
         sbot push version
+
+    # Use secret GH_TOKEN to publish the release

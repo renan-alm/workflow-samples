@@ -1,6 +1,12 @@
 name: 2 - Reusable Packaging
 
 on:
+  push:
+    paths:
+      - 'Dockerfile'
+      - 'src/**'
+      - '.github/workflows/5-reusable-publish-docker.yml'
+      - '.github/workflows/2**'
   workflow_call:
     inputs:
       tag_value:
@@ -13,19 +19,35 @@ on:
         type: string
 
 jobs:
-  create-release:
-    runs-on: ubuntu-latest
+  release_image:
+    uses: ./.github/workflows/5-reusable-publish-docker.yml
+    with:
+      registry: 'ghcr.io'
+      image_name: ${{ github.repository }}
+      image_version: ${{ needs.preparation.outputs.image_version }}
+    secrets:
+      registry_pwd: ${{ SECRETS.GITHUB_TOKEN }}
 
+  create-release:
+    needs: release_image
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-   
+
+    - name: Download artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: image-url
+        path: ./artifact
+
     - name: Create GitHub Release
       run: |
         gh release create "${{ env.tag }}" \
         --repo="${{ github.repository }}" \
         --title="${{ inputs.release_name }}" \
-        --generate-notes
+        --generate-notes \
+        --notes-file=./artifact/image-url
       env:
         GH_TOKEN: ${{ github.token }} ## Permissions iherited from the workflow_call
         tag: ${{ inputs.tag_value }}

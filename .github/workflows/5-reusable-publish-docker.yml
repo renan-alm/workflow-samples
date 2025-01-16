@@ -22,6 +22,10 @@ on:
       registry_pwd:
         description: 'Access token'
         required: true
+    outputs:
+      image_url: 
+        description: 'Image url'
+        value: ${{ inputs.image_version }}
 
 jobs:
   build-and-publish:
@@ -51,3 +55,14 @@ jobs:
           push: true
           tags: ${{ inputs.registry }}/${{ inputs.image_name }}:${{ inputs.image_version }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: image-url
+          path: ${{ inputs.registry }}/${{ inputs.image_name }}:${{ inputs.image_version }}
+
+
+      - name: Set output
+        run: echo "image_url=${{ inputs.registry }}/${{ inputs.image_name }}:${{ inputs.image_version }}" >> $GITHUB_OUTPUT
+  

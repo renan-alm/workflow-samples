@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'Dockerfile'
+      - 'src/**'
   workflow_dispatch:
     inputs:
       registry:
